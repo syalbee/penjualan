@@ -115,11 +115,11 @@ class Produk extends CI_Controller {
 		echo json_encode($this->produk_model->getNama($id));
 	}
 
-	public function get_stok()
+	public function get_harga()
 	{
 		header('Content-type: application/json');
 		$id = $this->input->post('id');
-		echo json_encode($this->produk_model->getStok($id));
+		echo json_encode($this->produk_model->getHarga($id));
 	}
 
 	public function produk_terlaris()
