@@ -7,13 +7,12 @@
     <title>AdminLTE 3 | Blank Page</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/') ?>plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/') ?>dist/css/adminlte.min.css">
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/sweetalert2/sweetalert2.min.css') ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') ?>">
-</head>
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/') ?>plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/') ?>dist/css/adminlte.min.css">
+  </head>
 
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
