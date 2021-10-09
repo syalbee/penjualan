@@ -11,6 +11,7 @@ class Transaksi extends CI_Controller
             redirect('login');
         }
         $this->load->model('transaksi_model');
+        $this->load->model('pelanggan_model');
     }
 
     public function index()
@@ -52,6 +53,10 @@ class Transaksi extends CI_Controller
         $qty = array();
         $statusHarga = array();
 
+        if ($this->input->post('pelanggan') !== '0') {
+            $this->setPoint($this->input->post('pelanggan'), $this->input->post('total_bayar'));
+        }
+
         foreach ($produk as $produk) {
             array_push($barcode, $produk->id);
             array_push($qty, $produk->terjual);
@@ -72,8 +77,24 @@ class Transaksi extends CI_Controller
 
         if ($this->transaksi_model->create($data)) {
             echo json_encode($this->db->insert_id());
-        }
+        } 
+
         $data = $this->input->post('form');
+    }
+
+    public function setPoint($id, $totalBelanja)
+    {
+        $pelanggan = $this->pelanggan_model->getPoint($id);
+        $toko =  $this->db->get('toko')->row();
+
+        $point = $pelanggan->point;
+        $minUang = $toko->jumUang;
+
+        if($totalBelanja >= $minUang){
+            $hasilPoint = $point + $toko->point;
+            $this->pelanggan_model->setPoint($id, $hasilPoint);
+        }
+
     }
 
     public function delete()
@@ -95,6 +116,7 @@ class Transaksi extends CI_Controller
         $produk->tanggal = $tanggal->format('d m Y H:i:s');
 
         $dataProduk = $this->transaksi_model->getName($barcode);
+
         foreach ($dataProduk as $key => $value) {
             $value->total = $qty[$key];
             $value->harga = $value->harga * $qty[$key];
@@ -109,6 +131,7 @@ class Transaksi extends CI_Controller
             'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
             'kasir' => $produk->kasir
         );
+
         $this->load->view('cetak', $data);
     }
 

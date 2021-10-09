@@ -44,6 +44,20 @@ class Pelanggan_model extends CI_Model {
 		return $this->db->query("SELECT memberid FROM bantu_pelanggan WHERE id = '1' ")->result_array();
 	}
 
+	public function getPoint($id)
+	{
+		$this->db->select('point');
+		$this->db->where('id', $id);
+		return $this->db->get($this->table)->row();
+	}
+
+	public function setPoint($id, $data)
+	{
+		$this->db->set('point', $data);
+		$this->db->where('id', $id);
+		return $this->db->update($this->table);
+	}
+
 	public function idTambah($data)
 	{
 		$this->db->set('memberid', $data);
