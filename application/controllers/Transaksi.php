@@ -53,7 +53,7 @@ class Transaksi extends CI_Controller
         $qty = array();
         $statusHarga = array();
 
-        if ($this->input->post('pelanggan') !== '0') {
+        if (!empty($this->input->post('pelanggan'))) {
             $this->setPoint($this->input->post('pelanggan'), $this->input->post('total_bayar'));
         }
 
@@ -77,10 +77,12 @@ class Transaksi extends CI_Controller
 
         if ($this->transaksi_model->create($data)) {
             echo json_encode($this->db->insert_id());
-        } 
+        }
 
         $data = $this->input->post('form');
     }
+
+
 
     public function setPoint($id, $totalBelanja)
     {
@@ -90,11 +92,10 @@ class Transaksi extends CI_Controller
         $point = $pelanggan->point;
         $minUang = $toko->jumUang;
 
-        if($totalBelanja >= $minUang){
+        if ($totalBelanja >= $minUang) {
             $hasilPoint = $point + $toko->point;
             $this->pelanggan_model->setPoint($id, $hasilPoint);
         }
-
     }
 
     public function delete()
@@ -105,35 +106,6 @@ class Transaksi extends CI_Controller
         }
     }
 
-    public function cetak($id)
-    {
-        $produk = $this->transaksi_model->getAll($id);
-
-        $tanggal = new DateTime($produk->tanggal);
-        $barcode = explode(',', $produk->barcode);
-        $qty = explode(',', $produk->qty);
-
-        $produk->tanggal = $tanggal->format('d m Y H:i:s');
-
-        $dataProduk = $this->transaksi_model->getName($barcode);
-
-        foreach ($dataProduk as $key => $value) {
-            $value->total = $qty[$key];
-            $value->harga = $value->harga * $qty[$key];
-        }
-
-        $data = array(
-            'nota' => $produk->nota,
-            'tanggal' => $produk->tanggal,
-            'produk' => $dataProduk,
-            'total' => $produk->total_bayar,
-            'bayar' => $produk->jumlah_uang,
-            'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
-            'kasir' => $produk->kasir
-        );
-
-        $this->load->view('cetak', $data);
-    }
 
     public function penjualan_bulan()
     {

@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a href="<?php echo site_url('') ?>" class="brand-link text-center">
-    <span class="brand-text font-weight-light"><?=  $this->session->userdata('toko')->nama; ?></span>
+    <span class="brand-text font-weight-light"><?= $this->session->userdata('toko')->nama; ?></span>
   </a>
   <?php $uri = $this->uri->segment(1) ?>
   <?php $role = $this->session->userdata('role'); ?>
@@ -23,13 +23,31 @@
             </p>
           </a>
         </li>
+
         <li class="nav-item">
           <a href="<?php echo site_url('pelanggan') ?>" class="nav-link <?php echo $uri == 'pelanggan' ? 'active' : 'no' ?>">
             <i class="nav-icon fas fa-address-book"></i>
             <p>
               Pelanggan
             </p>
+            <i class="right fas fa-angle-right"></i>
           </a>
+
+          <ul class="nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo site_url('pelanggan') ?>" class="nav-link <?php echo $uri == 'pelanggan' ? 'active' : 'no' ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List Pelanggan</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="<?php echo site_url('laporan_penjualan') ?>" class="nav-link <?php echo $uri == 'laporan_penjualan' ? 'active' : 'no' ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Penukaran Point</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">
@@ -40,7 +58,6 @@
             </p>
           </a>
         </li>
-
         <li class="nav-item">
           <a href="<?php echo site_url('transaksi') ?>" class="nav-link <?php echo $uri == 'transaksi' ? 'active' : 'no' ?>">
             <i class="fas fa-money-bill nav-icon"></i>
@@ -53,6 +70,7 @@
             <p>Laporan</p>
             <i class="right fas fa-angle-right"></i>
           </a>
+
           <ul class="nav-treeview">
             <li class="nav-item">
               <a href="<?php echo site_url('laporan_penjualan') ?>" class="nav-link <?php echo $uri == 'laporan_penjualan' ? 'active' : 'no' ?>">
@@ -63,18 +81,27 @@
             <li class="nav-item">
               <a href="<?php echo site_url('laporan_stok_masuk') ?>" class="nav-link <?php echo $uri == 'laporan_stok_masuk' ? 'active' : 'no' ?>">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Laporan Mingguan</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo site_url('laporan_stok_keluar') ?>" class="nav-link <?php echo $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Laporan Bulanan</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="<?php echo site_url('laporan_stok_keluar') ?>" class="nav-link <?php echo $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Laporan Tahunan</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="<?php echo site_url('laporan_stok_keluar') ?>" class="nav-link <?php echo $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Laporan Penukaran Point</p>
+              </a>
+            </li>
+
           </ul>
         </li>
-        
+
         <?php if ($role === 'admin') : ?>
           <li class="nav-item">
             <a href="<?php echo site_url('pengaturan') ?>" class="nav-link <?php echo $uri == 'pengaturan' ? 'active' : 'no' ?>">

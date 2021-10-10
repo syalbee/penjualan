@@ -45,12 +45,21 @@
                                         </div>
 
                                         <div>
-                                            <label>Jumlah Minimal Point</label>
+                                            <label>Jumlah minimal penukaran point</label>
                                             <input type="text" class="form-control" placeholder="Jumlah Minimal Point" name="point" value="<?php echo $toko->minPoint ?>" required>
                                         </div>
                                         <div>
-                                            <label>Jumlah Penukaran Uang</label>
+                                            <label>Minimal total belanja untuk mendapatkan point</label>
                                             <input type="text" class="form-control" placeholder="Jumlah Penukaran Uang" name="uang" value="<?php echo $toko->jumUang ?>" required>
+                                        </div>
+                                        <hr>
+                                        <div>
+                                            <label>Point yang didapat setiap transaksi</label>
+                                            <input type="text" class="form-control" name="dapatpoint" value="<?php echo $toko->point ?>" required>
+                                        </div>
+                                        <div>
+                                            <label>Jumlah uang yang didapat saat penukaran</label>
+                                            <input type="text" class="form-control" name="dapatuang" value="<?php echo $toko->uang ?>" required>
                                         </div>
 
                                         <div class="form-group">

@@ -24,8 +24,11 @@ class Pengaturan extends CI_Controller {
 			'nama' => $this->input->post('nama'),
 			'minPoint' => $this->input->post('point'),
             'jumUang' => $this->input->post('uang'),
+			'uang' => $this->input->post('dapatuang'),
+			'point' => $this->input->post('dapatpoint'),
 			'alamat' => $this->input->post('alamat')
 		);
+
 		$this->db->where('id', 1);
 		if ($this->db->update('toko', $data)) {
 			$this->db->select('nama, alamat');

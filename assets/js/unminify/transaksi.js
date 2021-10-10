@@ -89,6 +89,7 @@ function getHarga() {
 
 function bayarCetak() {
 	isCetak = true;
+	console.log("id pelanggan = " + $("#pelanggan").val());
 }
 
 function bayar() {

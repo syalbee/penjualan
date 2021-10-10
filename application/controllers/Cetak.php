@@ -1,155 +1,121 @@
-<?php 
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Cetak extends CI_Controller {
+class Cetak extends CI_Controller
+{
 
-    public function struk() {
-        // me-load library escpos
+    public function __construct()
+    {
+        parent::__construct();
+        if ($this->session->userdata('status') !== 'login') {
+            redirect('login');
+        }
+        $this->load->model('transaksi_model');
+        $this->load->model('pelanggan_model');
+    }
+
+    public function struk($id)
+    {
+
         $this->load->library('escpos');
-
-        // membuat connector printer ke shared printer bernama "printer_a" (yang telah disetting sebelumnya)
         $connector = new Escpos\PrintConnectors\WindowsPrintConnector("RP58");
-        // $connector = new Escpos\PrintConnectors\NetworkPrintConnector("192.168.43.230", 9100);
-
-        // membuat objek $printer agar dapat di lakukan fungsinya
         $printer = new Escpos\Printer($connector);
+        $transaksi = $this->_getTransaksi($id);
 
-
-        /* ---------------------------------------------------------
-         * Teks biasa | text()
-         */
-        $printer->initialize();
-        $printer->text("Ini teks biasa \n");
-        $printer->text("\n");
-
-        /* ---------------------------------------------------------
-         * Select print mode | selectPrintMode()
-         */
-        // Printer::MODE_FONT_A
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_FONT_A);
-        $printer->text("teks dengan MODE_FONT_A \n");
-        $printer->text("\n");
-
-        // Printer::MODE_FONT_B
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_FONT_B);
-        $printer->text("teks dengan MODE_FONT_B \n");
-        $printer->text("\n");
-
-        // Printer::MODE_EMPHASIZED
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_EMPHASIZED);
-        $printer->text("teks dengan MODE_EMPHASIZED \n");
-        $printer->text("\n");
-
-        // Printer::MODE_DOUBLE_HEIGHT
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_DOUBLE_HEIGHT);
-        $printer->text("teks dengan MODE_DOUBLE_HEIGHT \n");
-        $printer->text("\n");
-
-        // Printer::MODE_DOUBLE_WIDTH
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_DOUBLE_WIDTH);
-        $printer->text("teks dengan MODE_DOUBLE_WIDTH \n");
-        $printer->text("\n");
-
-        // Printer::MODE_UNDERLINE
-        $printer->initialize();
-        $printer->selectPrintMode(Escpos\Printer::MODE_UNDERLINE);
-        $printer->text("teks dengan MODE_UNDERLINE \n");
-        $printer->text("\n");
-
-
-        /* ---------------------------------------------------------
-         * Teks dengan garis bawah  | setUnderline()
-         */
-        $printer->initialize();
-        $printer->setUnderline(Escpos\Printer::UNDERLINE_DOUBLE);
-        $printer->text("Ini teks dengan garis bawah \n");
-        $printer->text("\n");
-
-        /* ---------------------------------------------------------
-         * Rata kiri, tengah, dan kanan (JUSTIFICATION) | setJustification()
-         */
-        // Teks rata kiri JUSTIFY_LEFT
-        $printer->initialize();
-        $printer->setJustification(Escpos\Printer::JUSTIFY_LEFT);
-        $printer->text("Ini teks rata kiri \n");
-        $printer->text("\n");
-
-        // Teks rata tengah JUSTIFY_CENTER
         $printer->initialize();
         $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
-        $printer->text("Ini teks rata tengah \n");
-        $printer->text("\n");
-
-        // Teks rata kanan JUSTIFY_RIGHT
-        $printer->initialize();
-        $printer->setJustification(Escpos\Printer::JUSTIFY_RIGHT);
-        $printer->text("Ini teks rata kanan \n");
-        $printer->text("\n");
-
-
-        /* ---------------------------------------------------------
-         * Font A, B dan C | setFont()
-         */
-        // Teks dengan font A
-        $printer->initialize();
         $printer->setFont(Escpos\Printer::FONT_A);
-        $printer->text("Ini teks dengan font A \n");
-        $printer->text("\n");
+        $printer->text($this->session->userdata('toko')->nama . "\n");
+        $printer->text($this->session->userdata('toko')->alamat . "\n");
+        $printer->text("-------------------------------");
 
-        // Teks dengan font B
         $printer->initialize();
-        $printer->setFont(Escpos\Printer::FONT_B);
-        $printer->text("Ini teks dengan font B \n");
+        $printer->setJustification(Escpos\Printer::JUSTIFY_LEFT);
+        $printer->text("No Nota : " . $transaksi['nota'] . "\n");
+        $printer->text("Tanggal : " . $transaksi['tanggal'] . "\n");
+        $printer->text("Kasir   : " . $transaksi['kasir'] . "\n");
+        $printer->text("-------------------------------");
         $printer->text("\n");
 
-        // Teks dengan font C
+        foreach ($transaksi['produk'] as $key) {
+
+            $printer->initialize();
+            $printer->setFont(Escpos\Printer::FONT_A);
+            $printer->text($key->nama . "  \n");
+
+            $printer->initialize();
+            $printer->setFont(Escpos\Printer::FONT_C);
+            $printer->text($key->total . " * ");
+            $printer->text($key->harga . " = ");
+
+            $printer->text($key->total * $key->harga . "\n");
+            $printer->initialize();
+            $printer->setFont(Escpos\Printer::FONT_A);
+        }
+
+        $printer->text("-------------------------------");
+        $printer->text("\n");
+
+        if ($transaksi['pelanggan'] !== '0') {
+
+            $this->db->select('nama, point');
+            $this->db->where('id', $transaksi['pelanggan']);
+            $pelanggan = $this->db->get('pelanggan')->row();
+
+            $printer->text("Nama    : " . $pelanggan->nama . "\n");
+            $printer->text("Point   : " . $pelanggan->point . "\n");
+            $printer->text("--------------------------------");
+        }
+
+        $printer->text("Total   : " . $transaksi['total'] . "\n");
+        $printer->text("Tunai   : " . $transaksi['bayar'] . "\n");
+        $printer->text("Kembali : " . $transaksi['kembalian'] . "\n");
+        $printer->text("\n");
+
         $printer->initialize();
-        $printer->setFont(Escpos\Printer::FONT_C);
-        $printer->text("Ini teks dengan font C \n");
-        $printer->text("\n");
+        $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+        $printer->text("TERIMA KASIH \n");
 
-        /* ---------------------------------------------------------
-         * Jarak perbaris 40 (linespace) | setLineSpacing()
-         */
-        $printer->initialize();
-        $printer->setLineSpacing(40);
-        $printer->text("Ini paragraf dengan \nline spacing sebesar 40 \ndi printer dotmatrix \n");
-        $printer->text("\n");
-
-        /* ---------------------------------------------------------
-         * Jarak dari kiri (Margin Left) | setPrintLeftMargin()
-         */
-        $printer->initialize();
-        $printer->setPrintLeftMargin(10);
-        $printer->text("Ini teks berjarak 10 dari kiri (Margin left) \n");
-        $printer->text("\n");
-
-        /* ---------------------------------------------------------
-         * membalik warna teks (background menjadi hitam) | setReverseColors()
-         */
-        $printer->initialize();
-        $printer->setReverseColors(TRUE);
-        $printer->text("Warna Teks ini terbalik \n");
-        $printer->text("\n");
-
-
-        /* ---------------------------------------------------------
-         * Menyelesaikan printer
-         */
-        $printer->feed(4); // mencetak 2 baris kosong, agar kertas terangkat ke atas
+        $printer->feed(2); // mencetak 2 baris kosong, agar kertas terangkat ke atas
         $printer->close();
+
+        redirect('transaksi');
     }
 
-    public function test($nota)
+    private function _getTransaksi($id)
     {
-       
+        $produk = $this->transaksi_model->getAll($id);
+
+        $tanggal = new DateTime($produk->tanggal);
+        $barcode = explode(',', $produk->barcode);
+        $qty = explode(',', $produk->qty);
+        $stsHarga = explode(',', $produk->status_harga);
+        $produk->tanggal = $tanggal->format('d-m-Y H:i:s');
+        $dataProduk = $this->transaksi_model->getName($barcode);
+
+
+        foreach ($dataProduk as $key => $value) {
+            $false = $value->sts = $stsHarga[$key];
+            if ($false === "1") {
+                $value->harga = $value->harga_grosir;
+            } else {
+                $value->harga = $value->harga_biasa;
+            }
+
+            $value->total = $qty[$key];
+        }
+
+        $data = array(
+            'nota' => $produk->nota,
+            'tanggal' => $produk->tanggal,
+            'produk' => $dataProduk,
+            'total' => $produk->total_bayar,
+            'bayar' => $produk->jumlah_uang,
+            'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
+            'kasir' => $produk->kasir,
+            'pelanggan' => $produk->pelanggan
+        );
+
+        return $data;
     }
 }
-
-/* End of file Transaksi.php */
-/* Location: ./application/controllers/Transaksi.php */
