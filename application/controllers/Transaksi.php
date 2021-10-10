@@ -12,6 +12,7 @@ class Transaksi extends CI_Controller
         }
         $this->load->model('transaksi_model');
         $this->load->model('pelanggan_model');
+        date_default_timezone_set('Asia/Jakarta');
     }
 
     public function index()

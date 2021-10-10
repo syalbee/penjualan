@@ -12,6 +12,7 @@ class Laporan extends CI_Controller
 
 		$this->load->model('laporan_model');
 		$this->load->model('transaksi_model');
+		date_default_timezone_set('Asia/Jakarta');
 	}
 
 	public function index()
@@ -51,13 +52,13 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<a class="btn btn-sm btn-success" href="' . site_url('cetak/struk/') . $transaksi->id . '">Print</a> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
 			$data = array();
 		}
-	
+
 		$transaksi = array(
 			'data' => $data,
 		);
@@ -75,13 +76,13 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<a class="btn btn-sm btn-success" href="' . site_url('cetak/struk/') . $transaksi->id . '">Print</a> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
 			$data = array();
 		}
-	
+
 		$transaksi = array(
 			'data' => $data,
 		);
@@ -99,67 +100,74 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<a class="btn btn-sm btn-success" href="' . site_url('cetak/struk/') . $transaksi->id . '">Print</a> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
 			$data = array();
 		}
-	
+
 		$transaksi = array(
 			'data' => $data,
 		);
 		echo json_encode($transaksi);
 	}
 
-	
+
 
 	public function detail($id)
 	{
 		$produk = $this->transaksi_model->getAll($id);
 
-        $tanggal = new DateTime($produk->tanggal);
-        $barcode = explode(',', $produk->barcode);
-        $qty = explode(',', $produk->qty);
-        $stsHarga = explode(',', $produk->status_harga);
-        $produk->tanggal = $tanggal->format('d-m-Y H:i:s');
-        $dataProduk = $this->transaksi_model->getName($barcode);
+		$tanggal = new DateTime($produk->tanggal);
+		$barcode = explode(',', $produk->barcode);
+		$qty = explode(',', $produk->qty);
+		$stsHarga = explode(',', $produk->status_harga);
+		$produk->tanggal = $tanggal->format('d-m-Y H:i:s');
+		$dataProduk = $this->transaksi_model->getName($barcode);
 
 
-        foreach ($dataProduk as $key => $value) {
-            $false = $value->sts = $stsHarga[$key];
-            if ($false === "1") {
-                $value->harga = $value->harga_grosir;
-            } else {
-                $value->harga = $value->harga_biasa;
-            }
+		foreach ($dataProduk as $key => $value) {
+			$false = $value->sts = $stsHarga[$key];
+			if ($false === "1") {
+				$value->harga = $value->harga_grosir;
+			} else {
+				$value->harga = $value->harga_biasa;
+			}
 
-            $value->total = $qty[$key];
-        }
+			$value->total = $qty[$key];
+		}
 
 		if ($produk->pelanggan !== '0') {
 
-            $this->db->select('nama, point');
-            $this->db->where('id', $produk->pelanggan);
-            $pelanggan = $this->db->get('pelanggan')->row();
-        } else{
+			$this->db->select('nama, point');
+			$this->db->where('id', $produk->pelanggan);
+			$pelanggan = $this->db->get('pelanggan')->row();
+		} else {
 			$pelanggan = null;
 		}
 
-        $data = array(
-            'nota' => $produk->nota,
-            'tanggal' => $produk->tanggal,
-            'produk' => $dataProduk,
-            'total' => $produk->total_bayar,
-            'bayar' => $produk->jumlah_uang,
-            'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
-            'kasir' => $produk->kasir,
-            'pelanggan' => $pelanggan
-        );
+		$data = array(
+			'nota' => $produk->nota,
+			'tanggal' => $produk->tanggal,
+			'produk' => $dataProduk,
+			'total' => $produk->total_bayar,
+			'bayar' => $produk->jumlah_uang,
+			'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
+			'kasir' => $produk->kasir,
+			'pelanggan' => $pelanggan
+		);
 
 		$transaksi = array(
 			'data' => $data,
 		);
 		echo json_encode($transaksi);
 	}
+
+	public function transaksi_hari()
+    {
+        header('Content-type: application/json');
+        $total = $this->laporan_model->sumHari()->row();
+        echo json_encode($total);
+    }
 }

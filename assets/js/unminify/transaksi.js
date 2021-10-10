@@ -153,7 +153,7 @@ function add() {
 		success: (res) => {
 			if (isCetak) {
 				Swal.fire("Sukses", "Sukses Membayar", "success").then(
-					() => (window.location.href = `${cetakUrl}${res}`)
+					() => (print(cetakUrl, res))
 				);
 			} else {
 				Swal.fire("Sukses", "Sukses Membayar", "success").then(() =>
@@ -163,6 +163,19 @@ function add() {
 		},
 		error: (err) => {
 			console.log(err);
+		},
+	});
+}
+
+function print(cetakUrl, id){
+	$.ajax({
+		url: cetakUrl + id,
+		type: "post",
+		success: () => {
+			window.location.reload();
+		},
+		error: (a) => {
+			console.log(a);
 		},
 	});
 }

@@ -9,6 +9,7 @@ class Pengaturan extends CI_Controller {
 		if ($this->session->userdata('status') !== 'login' ) {
 			redirect('login');
 		}
+		date_default_timezone_set('Asia/Jakarta');
 	}
 	
 	public function index()

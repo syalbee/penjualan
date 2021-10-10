@@ -11,6 +11,7 @@ class Produk extends CI_Controller {
 			redirect('login');
 		}
 		$this->load->model('produk_model');
+		date_default_timezone_set('Asia/Jakarta');
 	}
 
 	public function index()

@@ -123,27 +123,29 @@ class WindowsPrintConnector implements PrintConnector
             $this -> isLocal = true;
             $this -> hostname = null;
             $this -> printerName = $dest;
-        } elseif (preg_match(self::REGEX_SMB, $dest) == 1) {
-            // Connect to samba share, eg smb://host/printer
-            $part = parse_url($dest);
-            $this -> hostname = $part['host'];
-            /* Printer name and optional workgroup */
-            $path = ltrim($part['path'], '/');
-            if (strpos($path, "/") !== false) {
-                $pathPart = explode("/", $path);
-                $this -> workgroup = $pathPart[0];
-                $this -> printerName = $pathPart[1];
-            } else {
-                $this -> printerName = $path;
-            }
-            /* Username and password if set */
-            if (isset($part['user'])) {
-                $this -> userName = $part['user'];
-                if (isset($part['pass'])) {
-                    $this -> userPassword = $part['pass'];
-                }
-            }
-        } elseif (preg_match(self::REGEX_PRINTERNAME, $dest) == 1) {
+        } 
+        // elseif (preg_match(self::REGEX_SMB, $dest) == 1) {
+        //     // Connect to samba share, eg smb://host/printer
+        //     $part = parse_url($dest);
+        //     $this -> hostname = $part['host'];
+        //     /* Printer name and optional workgroup */
+        //     $path = ltrim($part['path'], '/');
+        //     if (strpos($path, "/") !== false) {
+        //         $pathPart = explode("/", $path);
+        //         $this -> workgroup = $pathPart[0];
+        //         $this -> printerName = $pathPart[1];
+        //     } else {
+        //         $this -> printerName = $path;
+        //     }
+        //     /* Username and password if set */
+        //     if (isset($part['user'])) {
+        //         $this -> userName = $part['user'];
+        //         if (isset($part['pass'])) {
+        //             $this -> userPassword = $part['pass'];
+        //         }
+        //     }
+        // } 
+        elseif (preg_match(self::REGEX_PRINTERNAME, $dest) == 1) {
             // Just got a printer name. Assume it's on the current computer.
             $hostname = gethostname();
             if (!$hostname) {

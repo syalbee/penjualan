@@ -12,14 +12,15 @@ class Cetak extends CI_Controller
         }
         $this->load->model('transaksi_model');
         $this->load->model('pelanggan_model');
+        $this->load->library('escpos');
+        date_default_timezone_set('Asia/Jakarta');
     }
 
     public function struk($id)
     {
-
-        $this->load->library('escpos');
-        $connector = new Escpos\PrintConnectors\WindowsPrintConnector("RP58");
+        $connector = new Escpos\PrintConnectors\WindowsPrintConnector('thermalprint');
         $printer = new Escpos\Printer($connector);
+        
         $transaksi = $this->_getTransaksi($id);
 
         $printer->initialize();
@@ -78,8 +79,7 @@ class Cetak extends CI_Controller
 
         $printer->feed(2); // mencetak 2 baris kosong, agar kertas terangkat ke atas
         $printer->close();
-
-        redirect('dashboard');
+        
     }
 
     public function test()

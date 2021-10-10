@@ -10,6 +10,7 @@ class Pengguna extends CI_Controller {
 			redirect('login');
 		}
 		$this->load->model('pengguna_model');
+		date_default_timezone_set('Asia/Jakarta');
 	}
 
 	public function index()
