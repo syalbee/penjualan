@@ -29,7 +29,7 @@ class Pelanggan_model extends CI_Model {
 
 	public function search($search="")
 	{
-		$this->db->like('nama', $search);
+		$this->db->like('memberid', $search);
 		return $this->db->get($this->table)->result();
 	}
 

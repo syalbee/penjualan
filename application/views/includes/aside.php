@@ -4,8 +4,9 @@
   <a href="<?php echo site_url('') ?>" class="brand-link text-center">
     <span class="brand-text font-weight-light"><?= $this->session->userdata('toko')->nama; ?></span>
   </a>
-  <?php $uri = $this->uri->segment(1) ?>
-  <?php $role = $this->session->userdata('role'); ?>
+  <?php $uri = $this->uri->segment(1);
+  $role = $this->session->userdata('role'); ?>
+
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -64,8 +65,9 @@
             <p>Transaksi</p>
           </a>
         </li>
-        <li class="nav-item has-treeview <?php echo $uri == 'laporan_penjualan' || $uri == 'laporan_stok_masuk' || $uri == 'laporan_stok_keluar' ? 'menu-open' : 'no' ?>">
-          <a href="<?php echo site_url('laporan') ?>" class="nav-link <?php echo $uri == 'laporan_penjualan' || $uri == 'laporan_stok_masuk' || $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
+
+        <li class="nav-item">
+          <a href="<?php echo site_url('laporan/laporan_harian') ?>" class="nav-link <?php echo $uri == 'laporan'  ? 'active' : 'no' ?>">
             <i class="fas fa-book nav-icon"></i>
             <p>Laporan</p>
             <i class="right fas fa-angle-right"></i>
@@ -73,27 +75,27 @@
 
           <ul class="nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo site_url('laporan_penjualan') ?>" class="nav-link <?php echo $uri == 'laporan_penjualan' ? 'active' : 'no' ?>">
+              <a href="<?php echo site_url('laporan/laporan_harian') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_harian' ? 'active' : 'no' ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Laporan Harian</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo site_url('laporan_stok_masuk') ?>" class="nav-link <?php echo $uri == 'laporan_stok_masuk' ? 'active' : 'no' ?>">
+              <a href="<?php echo site_url('laporan/laporan_bulanan') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_bulanan' ? 'active' : 'no' ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Laporan Bulanan</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="<?php echo site_url('laporan_stok_keluar') ?>" class="nav-link <?php echo $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
+              <a href="<?php echo site_url('laporan/laporan_tahunan') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_tahunan' ? 'active' : 'no' ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Laporan Tahunan</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="<?php echo site_url('laporan_stok_keluar') ?>" class="nav-link <?php echo $uri == 'laporan_stok_keluar' ? 'active' : 'no' ?>">
+              <a href="<?php echo site_url('laporan/laporan_penukaran') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_penukaran' ? 'active' : 'no' ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Laporan Penukaran Point</p>
               </a>

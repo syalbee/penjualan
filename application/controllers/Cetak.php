@@ -79,7 +79,12 @@ class Cetak extends CI_Controller
         $printer->feed(2); // mencetak 2 baris kosong, agar kertas terangkat ke atas
         $printer->close();
 
-        redirect('transaksi');
+        redirect('dashboard');
+    }
+
+    public function test()
+    {
+        redirect('dashboard');
     }
 
     private function _getTransaksi($id)
