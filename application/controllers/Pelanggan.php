@@ -16,8 +16,8 @@ class Pelanggan extends CI_Controller
 
 	public function index()
 	{
-        // $this->load->view('template/header');
-        // $this->load->view('template/sidebar');
+		// $this->load->view('template/header');
+		// $this->load->view('template/sidebar');
 		$this->load->view('admin/pelanggan');
 	}
 
@@ -65,7 +65,6 @@ class Pelanggan extends CI_Controller
 		if ($this->pelanggan_model->create($data) && $this->pelanggan_model->idTambah($memberId)) {
 			echo json_encode('sukses');
 		}
-
 	}
 
 	public function delete()
@@ -116,5 +115,48 @@ class Pelanggan extends CI_Controller
 	{
 		$idmax = $this->pelanggan_model->maxId();
 		return $idmax[0]['memberid'] + 1;
+	}
+
+	public function cekdataPoint()
+	{
+		header('Content-type: application/json');
+		$pelanggan = $this->input->post('id');
+
+		$toko = $this->db->get('toko')->row();
+		$search = $this->pelanggan_model->cariPoint($pelanggan);
+		$data = array(
+			'nama' => $search->nama,
+			'point' => $search->point,
+			'uang' => $toko->uang,
+			'minpoint' => $toko->minPoint
+		);
+
+		echo json_encode($data);
+	}
+
+	public function updatePoint()
+	{
+		header('Content-type: application/json');
+		$pelanggan = $this->input->post('id');
+		$tanggal = $this->input->post('tanggal');
+		$point = $this->input->post('point');
+		$toko = $this->db->get('toko')->row();
+		$search = $this->pelanggan_model->cariPoint($pelanggan);
+
+
+		$insert = array(
+			'tanggal' => $tanggal,
+			'id_pelanggan' => $pelanggan,
+			'tukar_point' => $point,
+			'jumlah_uangkeluar' => ($point / $toko->minPoint) * $toko->uang
+		);
+
+		$data = array(
+			'point' => $search->point - $point,
+		);
+
+		if ($this->pelanggan_model->updatePoint($pelanggan, $data) && $this->db->insert('tukar_point', $insert)) {
+			echo ($point / $toko->minPoint) * $toko->uang;
+		}
 	}
 }

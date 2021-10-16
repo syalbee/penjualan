@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2021 at 03:10 AM
+-- Generation Time: Oct 16, 2021 at 09:36 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -60,10 +60,10 @@ CREATE TABLE `pelanggan` (
 --
 
 INSERT INTO `pelanggan` (`id`, `memberid`, `nama`, `point`, `alamat`, `telepon`, `nik`) VALUES
-(20, '888101', 'Jajang suherman', 7, 'Jl Tebet Dalam raya', '08965873432', '1234567890123456'),
+(20, '888101', 'Jajang suherman', 300, 'Jl Tebet Dalam raya', '08965873432', '1234567890123456'),
 (22, '888103', 'Ibrahim', 5, 'Jl cikole', '75834535', '1234567890123456'),
 (24, '888105', 'Ibrahim aji', 13, 'jl penggansaan', '89475893475', '1234567890123456'),
-(26, '888107', 'Aksyal', 24, 'Jl Pancoran', '0897654321', '1234567890123456');
+(26, '888107', 'Aksyal', 100, 'Jl Pancoran', '0897654321', '1234567890123456');
 
 -- --------------------------------------------------------
 
@@ -137,7 +137,7 @@ CREATE TABLE `toko` (
 --
 
 INSERT INTO `toko` (`id`, `nama`, `alamat`, `minPoint`, `point`, `jumUang`, `uang`) VALUES
-(1, 'Toko Cirobon Jaya', 'Jl Cirebon No 69\r\n', 200, 1, 30000, 10000);
+(1, 'Toko Cirebon', 'Jl Cirebon No.69', 200, 1, 20000, 1000);
 
 -- --------------------------------------------------------
 
@@ -219,9 +219,16 @@ CREATE TABLE `tukar_point` (
   `id` int(11) NOT NULL,
   `tanggal` datetime NOT NULL,
   `id_pelanggan` int(11) NOT NULL,
-  `point_masuk` int(100) NOT NULL,
-  `point_keluar` int(100) NOT NULL
+  `tukar_point` int(100) NOT NULL,
+  `jumlah_uangkeluar` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tukar_point`
+--
+
+INSERT INTO `tukar_point` (`id`, `tanggal`, `id_pelanggan`, `tukar_point`, `jumlah_uangkeluar`) VALUES
+(2, '0000-00-00 00:00:00', 888107, 200, 1000);
 
 --
 -- Indexes for dumped tables
@@ -307,7 +314,7 @@ ALTER TABLE `transaksi`
 -- AUTO_INCREMENT for table `tukar_point`
 --
 ALTER TABLE `tukar_point`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

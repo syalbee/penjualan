@@ -246,6 +246,7 @@ $(".modal").on("hidden.bs.modal", () => {
 	$("#form")[0].reset();
 	$("#form").validate().resetForm();
 });
+
 $(".modal").on("show.bs.modal", () => {
 	let now = moment().format("D-MM-Y H:mm:ss"),
 		total = bantuHarga,
@@ -254,6 +255,7 @@ $(".modal").on("show.bs.modal", () => {
 		$(".total_bayar").html(formatRupiah(total)),
 		$(".kembalian").html(Math.max(jumlah_uang - total, 0));
 });
+
 $("#form").validate({
 	errorElement: "span",
 	errorPlacement: (err, el) => {

@@ -66,4 +66,20 @@ class Pelanggan_model extends CI_Model
 		return $this->db->update('bantu_pelanggan');
 		// return $this->db->insert('bantu_pelanggan', $data);
 	}
+
+	public function cariPoint($id)
+	{
+		$this->db->select('nama, point');
+		$this->db->where('memberid', $id);
+		return $this->db->get($this->table)->row();
+	}
+
+
+	public function updatePoint($id, $data)
+	{
+
+		$this->db->where('memberid', $id);
+		return $this->db->update($this->table, $data);
+
+	}
 }
