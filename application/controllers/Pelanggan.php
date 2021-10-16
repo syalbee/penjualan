@@ -21,6 +21,11 @@ class Pelanggan extends CI_Controller
 		$this->load->view('admin/pelanggan');
 	}
 
+	public function indexPoint()
+	{
+		$this->load->view('admin/pelanggan_point');
+	}
+
 	public function read()
 	{
 		header('Content-type: application/json');

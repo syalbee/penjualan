@@ -1,3 +1,4 @@
+
 let isCetak = false,
 	produk = [],
 	transaksi = $("#transaksi").DataTable({
@@ -7,17 +8,28 @@ let isCetak = false,
 		scrollX: true,
 	});
 
+let bantuHarga = 0;
+let bantuKembali = 0;
+var inputJumlah = document.getElementById("jumlah");
+inputJumlah.addEventListener("keyup", function (event) {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("tambah").click();
+	}
+});
+
 function reloadTable() {
 	transaksi.ajax.reload();
 }
 
 function nota(jumlah) {
+	let bantuTanggal = moment().format("DMMYmm");
 	let hasil = "",
 		char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
 		total = char.length;
 	for (var r = 0; r < jumlah; r++)
 		hasil += char.charAt(Math.floor(Math.random() * total));
-	return hasil;
+	return bantuTanggal + hasil;
 }
 
 function getNama() {
@@ -29,7 +41,9 @@ function getNama() {
 			id: $("#barcode").val(),
 		},
 		success: (res) => {
+			console.log(res.nama);
 			$("#nama_produk").html(res.nama);
+			inputJumlah.focus();
 			checkEmpty();
 		},
 		error: (err) => {
@@ -52,7 +66,7 @@ function getHarga() {
 				jumlah = parseInt($("#jumlah").val()),
 				harga = 0,
 				sts = 0,
-				total = parseInt($("#total").html());
+				total = bantuHarga;
 
 			if (jumlah >= res.jml_grosir) {
 				harga = parseInt(res.harga_grosir);
@@ -79,7 +93,10 @@ function getHarga() {
 					`<button name="${barcode}" class="btn btn-sm btn-danger" onclick="remove('${barcode}')">Hapus</btn>`,
 				])
 				.draw();
-			$("#total").html(total + subTotal);
+			bantuHarga = total + subTotal;
+			$('#barcode').click();
+			console.log("click button barcode");
+			$("#total").html(formatRupiah(bantuHarga));
 			$("#jumlah").val("");
 			$("#tambah").attr("disabled", "disabled");
 			$("#bayar").removeAttr("disabled");
@@ -109,7 +126,8 @@ function checkEmpty() {
 
 function checkUang() {
 	let jumlah_uang = $('[name="jumlah_uang"').val(),
-		total_bayar = parseInt($(".total_bayar").html());
+		total_bayar = bantuHarga;
+	console.log(total_bayar);
 	console.log(jumlah_uang);
 	if (jumlah_uang !== "" && jumlah_uang >= total_bayar) {
 		$("#add").removeAttr("disabled");
@@ -124,7 +142,7 @@ function remove(nama) {
 	let data = transaksi.row($("[name=" + nama + "]").closest("tr")).data(),
 		harga = data[1],
 		qty = data[2],
-		total = parseInt($("#total").html());
+		total = bantuHarga;
 	akhir = total - qty * harga;
 	$("#total").html(akhir);
 	transaksi
@@ -145,19 +163,20 @@ function add() {
 		data: {
 			produk: JSON.stringify(produk),
 			tanggal: $("#tanggal").val(),
-			total_bayar: $("#total").html(),
+			total_bayar: bantuHarga,
 			jumlah_uang: $('[name="jumlah_uang"]').val(),
 			pelanggan: $("#pelanggan").val(),
 			nota: $("#nota").html(),
 		},
 		success: (res) => {
+			bantuKembali = "<h1>" + formatRupiah(bantuKembali) + "</h1>";
 			if (isCetak) {
-				Swal.fire("Sukses", "Sukses Membayar", "success").then(
-					() => (print(cetakUrl, res))
+				Swal.fire("<h1>Kembalian</h1>", bantuKembali, "success").then(() =>
+					print(cetakUrl, res)
 				);
 			} else {
-				Swal.fire("Sukses", "Sukses Membayar", "success").then(() =>
-					window.location.reload()
+				Swal.fire("Kemba<h1>Kembalian</h1>lian", bantuKembali, "success").then(
+					() => window.location.reload()
 				);
 			}
 		},
@@ -167,7 +186,7 @@ function add() {
 	});
 }
 
-function print(cetakUrl, id){
+function print(cetakUrl, id) {
 	$.ajax({
 		url: cetakUrl + id,
 		type: "post",
@@ -181,9 +200,10 @@ function print(cetakUrl, id){
 }
 
 function kembalian() {
-	let total = $("#total").html(),
+	let total = bantuHarga,
 		jumlah_uang = $('[name="jumlah_uang"').val();
-	$(".kembalian").html(jumlah_uang - total);
+	bantuKembali = jumlah_uang - total;
+	$(".kembalian").html(formatRupiah(jumlah_uang - total));
 	checkUang();
 }
 
@@ -227,10 +247,10 @@ $(".modal").on("hidden.bs.modal", () => {
 });
 $(".modal").on("show.bs.modal", () => {
 	let now = moment().format("D-MM-Y H:mm:ss"),
-		total = $("#total").html(),
+		total = bantuHarga,
 		jumlah_uang = $('[name="jumlah_uang"').val();
 	$("#tanggal").val(now),
-		$(".total_bayar").html(total),
+		$(".total_bayar").html(formatRupiah(total)),
 		$(".kembalian").html(Math.max(jumlah_uang - total, 0));
 });
 $("#form").validate({
@@ -242,4 +262,16 @@ $("#form").validate({
 		add();
 	},
 });
-$("#nota").html(nota(15));
+$("#nota").html(nota(5));
+
+function formatRupiah(bilangan) {
+	var reverse = bilangan.toString().split("").reverse().join(""),
+		ribuan = reverse.match(/\d{1,3}/g);
+	ribuan = ribuan.join(".").split("").reverse().join("");
+
+	if (bilangan < 0) {
+		return "RP." + bilangan;
+	} else {
+		return "RP." + ribuan;
+	}
+}

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/select2/css/select2.min.css') ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/adminlte/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') ?>">
-    <?php $this->load->view('kasir/partials/head'); ?>
+    <?php $this->load->view('partials/head'); ?>
     <style>
         @media(max-width: 576px) {
             .nota {
@@ -27,9 +27,9 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
-        <?php $this->load->view('kasir/includes/nav'); ?>
+        <?php $this->load->view('includes/nav'); ?>
 
-        <?php $this->load->view('kasir/includes/aside'); ?>
+        <?php $this->load->view('includes/aside'); ?>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -138,8 +138,8 @@
         </div>
     </div>
     <!-- ./wrapper -->
-    <?php $this->load->view('kasir/includes/footer'); ?>
-    <?php $this->load->view('kasir/partials/footer'); ?>
+    <?php $this->load->view('includes/footer'); ?>
+    <?php $this->load->view('partials/footer'); ?>
     <script src="<?php echo base_url('assets/vendor/adminlte/plugins/datatables/jquery.dataTables.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/adminlte/plugins/jquery-validation/jquery.validate.min.js') ?>"></script>

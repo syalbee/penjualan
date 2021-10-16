@@ -47,7 +47,7 @@ class Produk_model extends CI_Model
 
 	public function getBarcode($search = '')
 	{
-		$this->db->select('produk.id, produk.barcode');
+		$this->db->select('produk.id, produk.barcode', 1);
 		$this->db->like('barcode', $search);
 		return $this->db->get($this->table)->result();
 	}
