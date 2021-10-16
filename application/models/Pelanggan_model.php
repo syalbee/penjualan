@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Pelanggan_model extends CI_Model {
+class Pelanggan_model extends CI_Model
+{
 
 	private $table = 'pelanggan';
 
@@ -27,7 +28,7 @@ class Pelanggan_model extends CI_Model {
 		return $this->db->delete($this->table);
 	}
 
-	public function search($search="")
+	public function search($search = "")
 	{
 		$this->db->like('memberid', $search);
 		return $this->db->get($this->table)->result();

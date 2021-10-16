@@ -144,7 +144,8 @@ function remove(nama) {
 		qty = data[2],
 		total = bantuHarga;
 	akhir = total - qty * harga;
-	$("#total").html(akhir);
+	bantuHarga = akhir;
+	$("#total").html(formatRupiah(akhir));
 	transaksi
 		.row($("[name=" + nama + "]").closest("tr"))
 		.remove()

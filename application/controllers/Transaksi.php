@@ -92,10 +92,11 @@ class Transaksi extends CI_Controller
 
         $point = $pelanggan->point;
         $minUang = $toko->jumUang;
+        $pointKelipatan = round($totalBelanja / $minUang);
 
         if ($totalBelanja >= $minUang) {
-            $hasilPoint = $point + $toko->point;
-            $this->pelanggan_model->setPoint($id, $hasilPoint);
+            $hasilPoint = $toko->point * $pointKelipatan;
+            $this->pelanggan_model->setPoint($id, $hasilPoint + $point);
         }
     }
 
@@ -140,4 +141,5 @@ class Transaksi extends CI_Controller
         }
         echo json_encode($total);
     }
+
 }

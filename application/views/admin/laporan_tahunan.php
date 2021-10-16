@@ -28,9 +28,9 @@
                         <div class="col">
                             <h1 class="m-0 text-dark">Laporan Penjualan Tahunan</h1>
                             <br>
-                            <h5 class="m-0 text-success">Total Pemasukan : Rp. <?= $pemasukan; ?> </h5>
-                            <h5 class="m-0 text-danger">Total Pengeluaran : Rp. <?= $pengeluaran; ?> </h5>
-                            <h5 class="m-0 text-warning">Utung : Rp. <?= $pemasukan - $pengeluaran; ?></h5>
+                            <h5 class="m-0 text-success">Total Pemasukan : <?= rupiah($pemasukan); ?> </h5>
+                            <h5 class="m-0 text-danger">Total Pengeluaran : <?= rupiah($pengeluaran); ?> </h5>
+                            <h5 class="m-0 text-warning">Utung : <?= rupiah($pemasukan - $pengeluaran); ?></h5>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
