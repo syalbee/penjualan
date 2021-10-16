@@ -102,7 +102,7 @@
                                         <th>Harga</th>
                                         <th>Qty</th>
                                         <th>Jumlah</th>
-                                        <th>Actions</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                             </table>
