@@ -1,4 +1,3 @@
-
 let isCetak = false,
 	produk = [],
 	transaksi = $("#transaksi").DataTable({
@@ -53,6 +52,7 @@ function getNama() {
 }
 
 function getHarga() {
+	document.getElementById("barcode").focus();
 	$.ajax({
 		url: produkGetharga,
 		type: "post",
@@ -94,7 +94,7 @@ function getHarga() {
 				])
 				.draw();
 			bantuHarga = total + subTotal;
-			$('#barcode').click();
+			$("#barcode").click();
 			console.log("click button barcode");
 			$("#total").html(formatRupiah(bantuHarga));
 			$("#jumlah").val("");
@@ -248,6 +248,7 @@ $(".modal").on("hidden.bs.modal", () => {
 });
 
 $(".modal").on("show.bs.modal", () => {
+	$('[name="jumlah_uang"').focus();
 	let now = moment().format("D-MM-Y H:mm:ss"),
 		total = bantuHarga,
 		jumlah_uang = $('[name="jumlah_uang"').val();
@@ -278,3 +279,4 @@ function formatRupiah(bilangan) {
 		return "RP." + ribuan;
 	}
 }
+

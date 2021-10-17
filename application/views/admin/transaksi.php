@@ -53,7 +53,17 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-sm-9">
-                                
+                                    <div class="form-group">
+                                        <label>Barcode</label>
+                                        <div class="form-inline">
+                                            <select  id="barcode" class="form-control select2 col-sm-12" onchange="getNama()">
+                                              
+                                            </select>
+
+                                            <h2 class="ml-3 text-muted" id="nama_produk"></h2>
+                                        </div>  
+                                    </div>
+
                                     <div class="form-group">
                                         <label>Jumlah</label>
                                         <input type="number" class="form-control col-sm-12" placeholder="Jumlah" id="jumlah" onkeyup="checkEmpty()">
@@ -125,7 +135,7 @@
                         </div>
                         <div class="form-group">
                             <label>Jumlah Uang</label>
-                            <input placeholder="Jumlah Uang" type="number" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
+                            <input placeholder="Jumlah Uang" type="number" id="juangs" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
                         </div>
                         <div class="form-group">
                             <label>Pelanggan</label>
