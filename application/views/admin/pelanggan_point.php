@@ -35,19 +35,19 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-body">
-                            <form id="point">
-                                <div class="form-row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="tukarpoint">ID Member</label>
-                                            <input type="text" class="form-control" id="tukarpoint" placeholder="Masukan ID Member" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <button class="btn btn-success" type="button" onclick="cekPoint()">Cek</button>
-                                        </div>
+                            <!-- <form id="point"> -->
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="tukarpoint">ID Member</label>
+                                        <input type="number" class="form-control" id="tukarpoint" placeholder="Masukan ID Member" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <button id="clickcek" class="btn btn-success" type="button" onclick="cekPoint()">Cek</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                            <!-- </form> -->
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
@@ -69,25 +69,26 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="cekPoint">
-                        <div class="form-group">
-                            <b>Mininimal point :</b> <span class="minpoint"></span><br>
-                            <b>Setiap penukaran mendapatkan :</b> <span class="minuang"></span><br>
-                            <hr>
-                            <b>Nama :</b> <span class="npoint"></span> <br>
-                            <b>Jumlah point :</b> <span class="jpoint"></span> <br>
-                            <b>Tanggal :</b> <span class="tpoint"></span>
+                    <!-- <form id="cekPoint"> -->
+                    <div class="form-group">
+                        <b>Mininimal point :</b> <span class="minpoint"></span><br>
+                        <b>Setiap penukaran mendapatkan :</b> <span class="minuang"></span><br>
+                        <hr>
+                        <b>Nama :</b> <span class="npoint"></span> <br>
+                        <b>Jumlah point :</b> <span class="jpoint"></span> <br>
+                        <b>Tanggal :</b> <span class="tpoint"></span>
 
-                        </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Point yang ingin ditukar</label>
-                            <input type="text" class="form-control" name="jumlahpoint" id="jumlahpoint" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Point yang ingin ditukar</label>
+                        <input type="number" class="form-control" name="jumlahpoint" id="jumlahpoint" required>
+                    </div>
 
-                        <button id="add" class="btn btn-success" type="button" onclick="setPoint()">Tukar</button>
-                        <button class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </form>
+                    <button id="add" class="btn btn-success" type="button" onclick="setPoint()">Tukar</button>
+                    <button id="add" class="btn btn-success" type="button" onclick="setPointAll()">Tukar Semua</button>
+                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -100,7 +101,7 @@
     <script src="<?php echo base_url('assets/vendor/adminlte/plugins/moment/moment.min.js') ?>"></script>
 
     <script>
-        // console.log(moment().format("D-M-Y H:mm:ss"));
+        console.log(moment().format("Y-M-D HH:mm:ss"));
         function cekPoint() {
 
             $.ajax({
@@ -113,7 +114,7 @@
                 success: (res) => {
                     console.log(res);
                     $('#modal').modal('show');
-
+                    $("#jumlahpoint").focus();
                     $(".npoint").html(res.nama);
                     $(".jpoint").html(res.point);
                     $(".minpoint").html(res.minpoint);
@@ -130,13 +131,34 @@
                 dataType: "json",
                 data: {
                     id: $("#tukarpoint").val(),
-                    tanggal: moment().format("D-M-Y H:mm:ss"),
+                    tanggal: moment().format("Y-M-D HH:mm:ss"),
                     point: $("#jumlahpoint").val()
                 },
                 success: (res) => {
-                    Swal.fire("<h1>Jumlah Uang</h1>", formatRupiah(parseInt(res)), "success").then(() =>
+                    console.log(moment().format("D-M-Y H:mm:ss"));
+                    Swal.fire("<h1>Jumlah Uang</h1>", "<h3>" + formatRupiah(parseInt(res)) + "</h3>", "success").then(() =>
                         window.location.reload()
                     );
+
+                },
+            });
+        }
+
+        function setPointAll() {
+            $.ajax({
+                url: '<?php echo site_url('pelanggan/updatepointall') ?>',
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: $("#tukarpoint").val(),
+                    tanggal: moment().format("Y-M-D HH:mm:ss"),
+                },
+                success: (res) => {
+                    console.log(moment().format("D-M-Y H:mm:ss"));
+                    Swal.fire("<h1>Jumlah Uang</h1>", "<h3>" + formatRupiah(parseInt(res)) + "</h3>", "success").then(() =>
+                        window.location.reload()
+                    );
+
                 },
             });
         }
@@ -152,6 +174,23 @@
                 return "RP." + ribuan;
             }
         }
+
+        var inputJumlah = document.getElementById("tukarpoint");
+        inputJumlah.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("clickcek").click();
+            }
+        });
+
+        var inputJumlah = document.getElementById("jumlahpoint");
+        inputJumlah.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("add").click();
+                console.log("cek biutt");
+            }
+        });
     </script>
 </body>
 

@@ -22,7 +22,6 @@ class Laporan extends CI_Controller
 		}
 	}
 
-
 	public function laporan_harian()
 	{
 		$data = $this->laporan_model->sumHari()->row();
@@ -41,6 +40,12 @@ class Laporan extends CI_Controller
 		$this->load->view('admin/laporan_tahunan', $data);
 	}
 
+	public function laporan_penukaran()
+	{
+
+		$this->load->view('admin/laporan_penukaran');
+	}
+
 	public function hari()
 	{
 		if ($this->laporan_model->readHari()->num_rows() > 0) {
@@ -52,7 +57,7 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak(' . $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
@@ -76,7 +81,7 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak(' . $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
@@ -100,7 +105,7 @@ class Laporan extends CI_Controller
 					'total_bayar' => $transaksi->total_bayar,
 					'jumlah_uang' => $transaksi->jumlah_uang,
 					'id' => $transaksi->id,
-					'action' => '<button class="btn btn-sm btn-success" onclick="cetak('. $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="cetak(' . $transaksi->id . ')">cetak</button> <button class="btn btn-sm btn-warning" onclick="detail(' . $transaksi->id . ')">Detail</button>'
 				);
 			}
 		} else {
@@ -113,6 +118,28 @@ class Laporan extends CI_Controller
 		echo json_encode($transaksi);
 	}
 
+	public function penukaran()
+	{
+		if ($this->laporan_model->readPenukaran()->num_rows() > 0) {
+			foreach ($this->laporan_model->readPenukaran()->result() as $penukaran) {
+				$tanggal = new DateTime($penukaran->tanggal);
+				$data[] = array(
+					'tanggal' => $tanggal->format('d-m-Y H:i:s'),
+					'id_pelanggan' => $penukaran->id_pelanggan,
+					'tukar_point' => $penukaran->tukar_point,
+					'jumlah_uangkeluar' => $penukaran->jumlah_uangkeluar,
+				);
+			}
+		} else {
+			$data = array();
+		}
+
+		$penukaran = array(
+			'data' => $data,
+		);
+
+		echo json_encode($penukaran);
+	}
 
 
 	public function detail($id)
@@ -165,9 +192,9 @@ class Laporan extends CI_Controller
 	}
 
 	public function transaksi_hari()
-    {
-        header('Content-type: application/json');
-        $total = $this->laporan_model->sumHari()->row();
-        echo json_encode($total);
-    }
+	{
+		header('Content-type: application/json');
+		$total = $this->laporan_model->sumHari()->row();
+		echo json_encode($total);
+	}
 }

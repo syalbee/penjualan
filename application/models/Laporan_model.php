@@ -33,6 +33,11 @@ class Laporan_model extends CI_Model
 		return $this->db->query($query);
 	}
 
+	public function readPenukaran()
+	{
+		return $this->db->get('tukar_point');
+	}
+
 	public function sumHari()
 	{
 		$query = "SELECT SUM(total_bayar) AS pengeluaran, SUM(jumlah_uang) AS pemasukan 
@@ -67,4 +72,3 @@ class Laporan_model extends CI_Model
 		return $data;
 	}
 }
-

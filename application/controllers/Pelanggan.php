@@ -159,4 +159,30 @@ class Pelanggan extends CI_Controller
 			echo ($point / $toko->minPoint) * $toko->uang;
 		}
 	}
+
+	public function updatePointall()
+	{
+		header('Content-type: application/json');
+		$pelanggan = $this->input->post('id');
+		$tanggal = $this->input->post('tanggal');
+		$toko = $this->db->get('toko')->row();
+		$search = $this->pelanggan_model->cariPoint($pelanggan);
+
+		$point = $search->point;
+
+		$insert = array(
+			'tanggal' => $tanggal,
+			'id_pelanggan' => $pelanggan,
+			'tukar_point' => $point,
+			'jumlah_uangkeluar' => ($point / $toko->minPoint) * $toko->uang
+		);
+
+		$data = array(
+			'point' => $search->point - $point,
+		);
+
+		if ($this->pelanggan_model->updatePoint($pelanggan, $data) && $this->db->insert('tukar_point', $insert)) {
+			echo ($point / $toko->minPoint) * $toko->uang;
+		}
+	}
 }
