@@ -59,6 +59,7 @@ class Pelanggan extends CI_Controller
 			'nama' => $this->input->post('nama'),
 			'point' => 0,
 			'alamat' => $this->input->post('alamat'),
+			'nik' => $this->input->post('nik'),
 			'telepon' => $this->input->post('telepon'),
 		);
 

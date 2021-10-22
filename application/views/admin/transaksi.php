@@ -135,7 +135,7 @@
                         </div>
                         <div class="form-group">
                             <label>Jumlah Uang</label>
-                            <input placeholder="Jumlah Uang" type="number" id="juangs" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
+                            <input placeholder="Jumlah Uang" type="number" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
                         </div>
                         <div class="form-group">
                             <label>Pelanggan</label>

@@ -248,6 +248,7 @@ $(".modal").on("hidden.bs.modal", () => {
 });
 
 $(".modal").on("show.bs.modal", () => {
+	console.log("masuk fokus");
 	$('[name="jumlah_uang"').focus();
 	let now = moment().format("D-MM-Y H:mm:ss"),
 		total = bantuHarga,

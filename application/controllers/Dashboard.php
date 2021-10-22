@@ -18,7 +18,7 @@ class Dashboard extends CI_Controller
 			if ($this->session->userdata('role') === 'admin') {
 				$this->load->view('admin/dashboard');
 			} else {
-				$this->load->view('kasir/transaksi');
+				$this->load->view('admin/transaksi');
 			}
 		}
 	}

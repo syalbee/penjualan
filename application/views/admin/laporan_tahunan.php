@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,9 +29,8 @@
                         <div class="col">
                             <h1 class="m-0 text-dark">Laporan Penjualan Tahunan</h1>
                             <br>
-                            <h5 class="m-0 text-success">Total Pemasukan : <?= rupiah($pemasukan); ?> </h5>
-                            <h5 class="m-0 text-danger">Total Pengeluaran : <?= rupiah($pengeluaran); ?> </h5>
-                            <h5 class="m-0 text-warning">Utung : <?= rupiah($pemasukan - $pengeluaran); ?></h5>
+                            <h5 class="m-0 text-success">Total Pemasukan : <?= rupiah($pengeluaran); ?> </h5>
+
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -115,4 +115,5 @@
     </script>
     <script src="<?php echo base_url('assets/js/laporan_tahunan.min.js') ?>"></script>
 </body>
+
 </html>
