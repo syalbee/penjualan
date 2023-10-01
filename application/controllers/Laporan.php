@@ -22,6 +22,11 @@ class Laporan extends CI_Controller
 		}
 	}
 
+	public function laporan_penjualan()
+	{
+		$this->load->view('admin/laporan_penjualan');
+	}
+
 	public function laporan_harian()
 	{
 		$data = $this->laporan_model->sumHari()->row();
@@ -155,14 +160,16 @@ class Laporan extends CI_Controller
 
 
 		foreach ($dataProduk as $key => $value) {
-			$false = $value->sts = $stsHarga[$key];
-			if ($false === "1") {
-				$value->harga = $value->harga_grosir;
-			} else {
-				$value->harga = $value->harga_biasa;
-			}
+			if ($value != null) {
+				$false = $value->sts = $stsHarga[$key];
+				if ($false === "1") {
+					$value->harga = $value->harga_grosir;
+				} else {
+					$value->harga = $value->harga_biasa;
+				}
 
-			$value->total = $qty[$key];
+				$value->total = $qty[$key];
+			}
 		}
 
 		if ($produk->pelanggan !== '0') {
@@ -196,5 +203,70 @@ class Laporan extends CI_Controller
 		header('Content-type: application/json');
 		$total = $this->laporan_model->sumHari()->row();
 		echo json_encode($total);
+	}
+
+
+	public function laporan()
+	{
+		header('Content-type: application/json');
+		$where = array();
+
+		if (!empty($this->input->post('nota'))) {
+			$where['tk.nota'] = $this->input->post('nota');
+		}
+
+		if (!empty($this->input->post('id_pelanggan'))) {
+			$where['tk.id_pelanggan'] = $this->input->post('id_pelanggan');
+		}
+		if (!empty($this->input->post('id_petugas'))) {
+			$where['tk.id_user_submit'] = $this->input->post('id_petugas');
+		}
+
+		$data = $this->laporan_model->laporan($where, $this->input->post('date1'), $this->input->post('date2'));
+
+		if ($data->num_rows() > 0) {
+			$data = $data->result_array();
+			$final['draw'] = 1;
+			$final['recordsTotal'] = sizeof($data);
+			$final['recordsFiltered'] = sizeof($data);
+			$final['data'] = $data;
+		} else {
+			$final['draw'] = 1;
+			$final['recordsTotal'] = 1;
+			$final['recordsFiltered'] = 1;
+			$final['data'] = [];
+		}
+
+		echo json_encode($final, true);
+	}
+
+	public function detail_laporan()
+	{
+		header('Content-type: application/json');
+		$where = array();
+
+
+		if (!empty($this->input->post('id'))) {
+			$where['tk.id'] = $this->input->post('id');
+			$data = $this->laporan_model->detail_laporan($where);
+		} else {
+			$where['tk.id'] = 'kosong';
+			$data = $this->laporan_model->detail_laporan($where);
+		}
+
+		if ($data->num_rows() > 0) {
+			$data = $data->result_array();
+			$final['draw'] = 1;
+			$final['recordsTotal'] = sizeof($data);
+			$final['recordsFiltered'] = sizeof($data);
+			$final['data'] = $data;
+		} else {
+			$final['draw'] = 1;
+			$final['recordsTotal'] = 1;
+			$final['recordsFiltered'] = 1;
+			$final['data'] = [];
+		}
+
+		echo json_encode($final, true);
 	}
 }

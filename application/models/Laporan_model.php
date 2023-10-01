@@ -71,4 +71,42 @@ class Laporan_model extends CI_Model
 		}
 		return $data;
 	}
+
+	public function laporan($where = array(), $start_date, $end_date)
+	{
+		$this->db->select('tk.*, pg.nama as nama_pelanggan, pn.nama as nama_pengguna, SUM(dt.qty * dt.harga) as total');
+		$this->db->from('transaksi_2 tk');
+		$this->db->join('detail_transaksi dt', 'dt.id_transaksi=tk.id');
+		$this->db->join('pelanggan pg', 'tk.id_pelanggan=pg.id');
+		$this->db->join('pengguna pn', 'tk.id_user_submit=pn.id');
+		$this->db->group_by('tk.id');
+		$this->db->order_by('tk.tanggal desc');
+		$this->db->where($where);
+		$this->db->where('dt.delete_at IS NULL', NULL);
+		if (!empty($start_date) && !empty($end_date)) {
+			$this->db->where("DATE_FORMAT(tk.tanggal,'%Y-%m-%d') >=", $start_date);
+			$this->db->where("DATE_FORMAT(tk.tanggal,'%Y-%m-%d') <=", $end_date);
+		}
+
+		// $this->db->limit($limit, $start);
+		// echo $this->db->get_compiled_select();
+		// die();
+		return $this->db->get();
+	}
+
+	public function detail_laporan($where = array())
+	{
+		$this->db->select('tk.*, dt.*, pd.nama as nama_product');
+
+		$this->db->from('transaksi_2 tk');
+		$this->db->join('detail_transaksi dt', 'dt.id_transaksi=tk.id');
+		$this->db->join('produk pd', 'dt.id_product=pd.id');
+
+
+		$this->db->where($where);
+
+		// echo $this->db->get_compiled_select();
+		// die();
+		return $this->db->get();
+	}
 }

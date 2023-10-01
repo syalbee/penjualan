@@ -1,13 +1,14 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Produk extends CI_Controller {
+class Produk extends CI_Controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->library('form_validation');
-		if ($this->session->userdata('status') !== 'login' ) {
+		if ($this->session->userdata('status') !== 'login') {
 			redirect('login');
 		}
 		$this->load->model('produk_model');
@@ -32,7 +33,7 @@ class Produk extends CI_Controller {
 					'harga_grosir' => $produk->harga_grosir,
 					'harga_biasa' => $produk->harga_biasa,
 					'jml_grosir' => $produk->jml_grosir,
-					'action' => '<button class="btn btn-sm btn-warning" onclick="edit('.$produk->id.')"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="remove('.$produk->id.')"><i class="fas fa-trash-alt"></i></button>'
+					'action' => '<button class="btn btn-sm btn-warning" onclick="edit(' . $produk->id . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="remove(' . $produk->id . ')"><i class="fas fa-trash-alt"></i></button>'
 				);
 			}
 		} else {
@@ -61,8 +62,18 @@ class Produk extends CI_Controller {
 
 	public function delete()
 	{
+		// $id = $this->input->post('id');
+
+		// if ($this->produk_model->delete($id)) {
+		// 	echo json_encode('sukses');
+		// }
+
 		$id = $this->input->post('id');
-		if ($this->produk_model->delete($id)) {
+		$data = array(
+			'delete_at' => date('Y-m-d')
+		);
+
+		if ($this->produk_model->update($id, $data)) {
 			echo json_encode('sukses');
 		}
 	}
@@ -79,7 +90,7 @@ class Produk extends CI_Controller {
 			'jml_grosir' => $this->input->post('jmlGrosir')
 		);
 
-		if ($this->produk_model->update($id,$data)) {
+		if ($this->produk_model->update($id, $data)) {
 			echo json_encode('sukses');
 		}
 	}
@@ -92,7 +103,6 @@ class Produk extends CI_Controller {
 		if ($kategori->row()) {
 			echo json_encode($kategori->row());
 		}
-
 	}
 
 	public function get_barcode()
@@ -100,6 +110,7 @@ class Produk extends CI_Controller {
 		header('Content-type: application/json');
 		$barcode = $this->input->post('barcode');
 		$search = $this->produk_model->getBarcode($barcode);
+		$data = null;
 		foreach ($search as $barcode) {
 			$data[] = array(
 				'id' => $barcode->id,
@@ -144,6 +155,4 @@ class Produk extends CI_Controller {
 		$produk = $this->produk_model->dataStok();
 		echo json_encode($produk);
 	}
-
 }
-

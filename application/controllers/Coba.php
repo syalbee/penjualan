@@ -8,7 +8,7 @@ class Coba extends CI_Controller {
         $this->load->library('escpos');
 
         // membuat connector printer ke shared printer bernama "printer_a" (yang telah disetting sebelumnya)
-        $connector = new Escpos\PrintConnectors\WindowsPrintConnector("RP58");
+        $connector = new Escpos\PrintConnectors\WindowsPrintConnector("thermalprint");
 
         // membuat objek $printer agar dapat di lakukan fungsinya
         $printer = new Escpos\Printer($connector);

@@ -56,12 +56,12 @@
                                     <div class="form-group">
                                         <label>Barcode</label>
                                         <div class="form-inline">
-                                            <select  id="barcode" class="form-control select2 col-sm-12" onchange="getNama()">
-                                              
+                                            <select id="barcode" class="form-control select2 col-sm-12" onchange="getNama()">
+
                                             </select>
 
                                             <h2 class="ml-3 text-muted" id="nama_produk"></h2>
-                                        </div>  
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
@@ -73,7 +73,7 @@
                                         <div class="mb-0">
                                             <b class="mr-2">Nota</b> <span id="nota"></span>
                                         </div>
-                                        <span id="total" style="font-size: 80px; line-height: 1" class="text-danger">0</span>
+                                        <span id="total" style="font-size: 80px; line-height: 1" class="text-danger">Rp. 0</span>
                                     </div>
                                     <div class="form-group">
 
@@ -135,7 +135,7 @@
                         </div>
                         <div class="form-group">
                             <label>Jumlah Uang</label>
-                            <input placeholder="Jumlah Uang" type="number" id="juangs" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
+                            <input placeholder="Jumlah Uang" type="number" class="form-control" name="jumlah_uang" onkeyup="kembalian()" required>
                         </div>
                         <div class="form-group">
                             <label>Pelanggan</label>
@@ -147,8 +147,8 @@
                         <div class="form-group">
                             <b>Kembalian :</b> <span class="kembalian"></span>
                         </div>
-                        <button id="add" class="btn btn-success" type="submit" onclick="bayar()" disabled>Bayar</button>
-                        <button id="cetak" class="btn btn-success" type="submit" onclick="bayarCetak()" disabled>Bayar Dan Cetak</button>
+                        <button id="add" class="btn btn-success" type="button" disabled>Bayar</button>
+                        <button id="cetak" class="btn btn-success" type="button" disabled>Bayar Dan Cetak</button>
                         <button class="btn btn-danger" data-dismiss="modal">Close</button>
                     </form>
                 </div>

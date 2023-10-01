@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Transaksi_model extends CI_Model {
+class Transaksi_model extends CI_Model
+{
 
 	private $table = 'transaksi';
 
@@ -44,7 +45,7 @@ class Transaksi_model extends CI_Model {
 		foreach ($barcode as $key => $value) {
 			$this->db->select('nama_produk');
 			$this->db->where('id', $value);
-			$data[] = '<tr><td>'.$this->db->get('produk')->row()->nama_produk.' ('.$total[$key].')</td></tr>';
+			$data[] = '<tr><td>' . $this->db->get('produk')->row()->nama_produk . ' (' . $total[$key] . ')</td></tr>';
 		}
 		return join($data);
 	}
@@ -88,11 +89,71 @@ class Transaksi_model extends CI_Model {
 		foreach ($barcode as $b) {
 			$this->db->select('nama, harga_biasa, harga_grosir');
 			$this->db->where('id', $b);
+			$this->db->where('delete_at IS NULL', NULL, FALSE);
 			$data[] = $this->db->get('produk')->row();
 		}
 		return $data;
 	}
 
+	public function bayar($data)
+	{
+		$this->db->insert('transaksi_2', $data);
+		$insertId = $this->db->insert_id();
+
+		return  $insertId;
+	}
+
+	public function insert_produk($data)
+	{
+		return $this->db->insert('detail_transaksi', $data);
+	}
+
+	public function update_pembayaran($id, $uang)
+	{
+		$this->db->where('id', $id);
+		$this->db->set('jumlah_uang', $uang);
+		return $this->db->update('transaksi_2');;
+	}
+
+	public function delete_detail($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->set('delete_at', date('Y-m-d'));
+		return $this->db->update('detail_transaksi');;
+	}
+
+
+	public function get_struk($id = '')
+	{
+		$this->db->select('tk.*, pg.nama as nama_pelanggan,  pg.id as id_pelanggan, pn.nama as nama_pengguna, SUM(dt.qty * dt.harga) as total');
+		$this->db->from('transaksi_2 tk');
+		$this->db->join('detail_transaksi dt', 'dt.id_transaksi=tk.id');
+		$this->db->join('pelanggan pg', 'tk.id_pelanggan=pg.id');
+		$this->db->join('pengguna pn', 'tk.id_user_submit=pn.id');
+		$this->db->group_by('tk.id');
+		$this->db->order_by('tk.tanggal desc');
+		$this->db->where('tk.id', $id);
+		$this->db->where('dt.delete_at IS NULL', NULL);
+
+		// $this->db->limit($limit, $start);
+		// echo $this->db->get_compiled_select();
+		// die();
+		return $this->db->get();
+	}
+
+	public function detail_produk($id = '')
+	{
+		$this->db->select('dt.*, pd.nama as nama_product');
+
+		$this->db->from('detail_transaksi dt');
+		$this->db->join('produk pd', 'dt.id_product=pd.id');
+		$this->db->where('dt.delete_at IS NULL', NULL);
+		$this->db->where('dt.id_transaksi', $id);
+
+		// echo $this->db->get_compiled_select();
+		// die();
+		return $this->db->get();
+	}
 }
 
 /* End of file Transaksi_model.php */

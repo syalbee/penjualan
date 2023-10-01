@@ -1,12 +1,13 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Pengguna extends CI_Controller {
+class Pengguna extends CI_Controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
-		if ($this->session->userdata('status') !== 'login' ) {
+		if ($this->session->userdata('status') !== 'login') {
 			redirect('login');
 		}
 		$this->load->model('pengguna_model');
@@ -26,7 +27,7 @@ class Pengguna extends CI_Controller {
 				$data[] = array(
 					'username' => $pengguna->username,
 					'nama' => $pengguna->nama,
-					'action' => '<button class="btn btn-sm btn-success" onclick="edit('.$pengguna->id.')">Edit</button> <button class="btn btn-sm btn-danger" onclick="remove('.$pengguna->id.')">Delete</button>'
+					'action' => '<button class="btn btn-sm btn-success" onclick="edit(' . $pengguna->id . ')">Edit</button> <button class="btn btn-sm btn-danger" onclick="remove(' . $pengguna->id . ')">Delete</button>'
 				);
 			}
 		} else {
@@ -67,7 +68,7 @@ class Pengguna extends CI_Controller {
 			'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
 			'nama' => $this->input->post('nama')
 		);
-		if ($this->pengguna_model->update($id,$data)) {
+		if ($this->pengguna_model->update($id, $data)) {
 			echo json_encode('sukses');
 		}
 	}
@@ -81,6 +82,19 @@ class Pengguna extends CI_Controller {
 		}
 	}
 
+	public function search()
+	{
+		header('Content-type: application/json');
+		$pengguna = $this->input->post('nama');
+		$search = $this->pengguna_model->search($pengguna);
+		foreach ($search as $pengguna) {
+			$data[] = array(
+				'id' => $pengguna->id,
+				'text' => $pengguna->nama
+			);
+		}
+		echo json_encode($data);
+	}
 }
 
 /* End of file Pengguna.php */

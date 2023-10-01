@@ -29,9 +29,8 @@
                         <div class="col">
                             <h1 class="m-0 text-dark">Laporan Penjualan Harian</h1>
                             <br>
-                            <h5 class="m-0 text-success">Total Pemasukan : <?= rupiah($pemasukan); ?> </h5>
-                            <h5 class="m-0 text-danger">Total Pengeluaran : <?= rupiah($pengeluaran); ?> </h5>
-                            <h5 class="m-0 text-warning">Utung : <?= rupiah($pemasukan - $pengeluaran); ?></h5>
+                            <h5 class="m-0 text-success">Total Pemasukan : <?= rupiah($pengeluaran); ?> </h5>
+
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -78,7 +77,7 @@
                     <p id="nota"></p>
                     <p id="tanggal"></p>
                     <p id="kasir"></p>
-                    <table class="table w-100 table-bordered table-hover">
+                    <table id="table_data" class="table w-100 table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>Nama</th>

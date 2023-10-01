@@ -17,18 +17,20 @@ class Produk_model extends CI_Model
 		// $this->db->from($this->table);
 		// $this->db->join('kategori_produk', 'produk.kategori = kategori_produk.id');
 		// $this->db->join('satuan_produk', 'produk.satuan = satuan_produk.id');
-
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		return $this->db->get($this->table);
 	}
 
 	public function update($id, $data)
 	{
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		$this->db->where('id', $id);
 		return $this->db->update($this->table, $data);
 	}
 
 	public function delete($id)
 	{
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		$this->db->where('id', $id);
 		return $this->db->delete($this->table);
 	}
@@ -41,6 +43,7 @@ class Produk_model extends CI_Model
 		// $this->db->join('satuan_produk', 'produk.satuan = satuan_produk.id');
 		// $this->db->where('produk.id', $id);
 		// return $this->db->get();
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		$this->db->where('id', $id);
 		return $this->db->get($this->table);
 	}
@@ -49,6 +52,7 @@ class Produk_model extends CI_Model
 	{
 		$this->db->select('produk.id, produk.barcode', 1);
 		$this->db->like('barcode', $search);
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		return $this->db->get($this->table)->result();
 	}
 
@@ -56,6 +60,7 @@ class Produk_model extends CI_Model
 	{
 		$this->db->select('nama');
 		$this->db->where('id', $id);
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		return $this->db->get($this->table)->row();
 	}
 
@@ -63,6 +68,7 @@ class Produk_model extends CI_Model
 	{
 		$this->db->select('nama, harga_grosir, harga_biasa, jml_grosir');
 		$this->db->where('id', $id);
+		$this->db->where('delete_at IS NULL', NULL, FALSE);
 		return $this->db->get($this->table)->row();
 	}
 
@@ -74,7 +80,7 @@ class Produk_model extends CI_Model
 
 	public function dataStok()
 	{
-		return $this->db->query('SELECT produk.nama_produk, produk.stok FROM `produk` ORDER BY CONVERT(stok, decimal) DESC LIMIT 50')->result();
+		return $this->db->query('SELECT produk.nama_produk, produk.stok FROM `produk` WHERE produk.delete_at IS NULL ORDER BY CONVERT(stok, decimal) DESC LIMIT 50')->result();
 	}
 }
 

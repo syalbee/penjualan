@@ -12,12 +12,13 @@ class Transaksi extends CI_Controller
         }
         $this->load->model('transaksi_model');
         $this->load->model('pelanggan_model');
+        $this->load->library('cart');
         date_default_timezone_set('Asia/Jakarta');
     }
 
     public function index()
     {
-        $this->load->view('admin/transaksi');
+        $this->load->view('admin/transaksi_2');
     }
 
     public function read()
@@ -142,4 +143,193 @@ class Transaksi extends CI_Controller
         echo json_encode($total);
     }
 
+    // New kodingan
+
+    public function insert_to_chart()
+    {
+
+        $data = array(
+            'id'      => $this->input->post('id_product'),
+            'qty'     => $this->input->post('qty'),
+            'price'   => $this->input->post('harga'),
+            'name'    => $this->input->post('nama_product'),
+            'options' => array('status_harga' => $this->input->post('status_harga'),  'tanggal' => date('Y-m-d'))
+        );
+
+        if ($this->cart->insert($data)) {
+            $jumlah_harga = 0;
+
+            foreach ($this->cart->contents() as $data) {
+                $jumlah_harga += $data['subtotal'];
+            }
+
+            $hasil = array(
+                'code' => 200,
+                'message' => "Berhasil insert data",
+                'data' => $jumlah_harga,
+            );
+            echo json_encode($hasil);
+        }
+    }
+
+    public function get_data_cart()
+    {
+        $data = $this->cart->contents();
+        $final = array();
+        $produk = array();
+        $produk_data = array();
+
+        foreach ($data as $val) {
+            $produk['rowid'] = $val['rowid'];
+            $produk['name'] = $val['name'];
+            $produk['price'] = $val['price'];
+            $produk['qty'] = $val['qty'];
+            $produk['subtotal'] = $val['subtotal'];
+            $produk['id_product'] = $val['id'];
+
+            array_push($produk_data, $produk);
+        }
+
+        if (!empty($this->cart->contents())) {
+            $final['draw'] = 1;
+            $final['recordsTotal'] = sizeof($data);
+            $final['recordsFiltered'] = sizeof($data);
+            $final['data'] = $produk_data;
+        } else {
+            $final['draw'] = 1;
+            $final['recordsTotal'] = 1;
+            $final['recordsFiltered'] = 1;
+            $final['data'] = [];
+        }
+
+        echo json_encode($final, true);
+    }
+
+    public function delete_cart()
+    {
+        $data = array(
+            'rowid' => $this->input->post('rowid'),
+            'qty'   => 0
+        );
+
+        if ($this->cart->update($data)) {
+            $hasil = array(
+                'code' => 200,
+                'message' => "Berhasil hapus data",
+                'data' => [],
+            );
+            echo json_encode($hasil);
+        }
+    }
+
+    public function batal_transaksi()
+    {
+        $this->cart->destroy();
+        $hasil = array(
+            'code' => 200,
+            'message' => "Berhasil hapus data",
+            'data' => [],
+        );
+        echo json_encode($hasil);
+    }
+
+    public function get_subtotal()
+    {
+        $jumlah_harga = 0;
+        foreach ($this->cart->contents() as $data) {
+            $jumlah_harga += $data['subtotal'];
+        }
+
+        $hasil = array(
+            'code' => 200,
+            'message' => "Berhasil get data",
+            'data' => $jumlah_harga,
+        );
+
+        echo json_encode($hasil);
+    }
+
+    public function bayar_transaksi()
+    {
+        $id_pelanggan = '';
+        $tanggal = new DateTime($this->input->post('tanggal'));
+
+        if (!empty($this->input->post('pelanggan'))) {
+            $id_pelanggan = $this->input->post('pelanggan');
+            $this->setPoint($this->input->post('pelanggan'), $this->input->post('total_bayar'));
+        } else {
+            $id_pelanggan = '0';
+        }
+
+        $data_transaksi = array(
+            'total_bayar' => $this->input->post('total_bayar'),
+            'jumlah_uang' => $this->input->post('jumlah_uang'),
+            'id_pelanggan' => $id_pelanggan,
+            'nota' => $this->input->post('nota'),
+            'id_user_submit' => $this->session->userdata('id'),
+            'tanggal' => $tanggal->format('Y-m-d H:i:s'),
+        );
+
+        $id_transaksi = $this->transaksi_model->bayar($data_transaksi);
+
+        $data_produk = array();
+        if (!empty($id_transaksi)) {
+            foreach ($this->cart->contents() as $data) {
+                $data_produk['id_product'] = $data['id'];
+                $data_produk['id_transaksi'] = $id_transaksi;
+                $data_produk['qty'] = $data['qty'];
+                $data_produk['harga'] = $data['price'];
+                $data_produk['status_harga'] = $data['options']['status_harga'];
+                $data_produk['tanggal'] = $data['options']['tanggal'];
+                $this->transaksi_model->insert_produk($data_produk);
+            }
+        }
+        $this->cart->destroy();
+        $hasil = array(
+            'code' => 200,
+            'message' => "Berhasil bayar",
+            'id_transaksi' => $id_transaksi,
+        );
+
+        echo json_encode($hasil);
+    }
+
+
+    public function hapus_produk()
+    {
+        if ($this->transaksi_model->delete_detail($this->input->post('id'))) {
+            $hasil = array(
+                'code' => 200,
+                'message' => "Berhasil hapus produk",
+                'data' => [],
+            );
+        } else {
+            $hasil = array(
+                'code' => 200,
+                'message' => "Gagal hapus produk",
+                'data' => [],
+            );
+        }
+
+        echo json_encode($hasil);
+    }
+
+    public function update_kembalian()
+    {
+        if ($this->transaksi_model->update_pembayaran($this->input->post('id'), $this->input->post('kembalian'))) {
+            $hasil = array(
+                'code' => 200,
+                'message' => "Berhasil update transaksi",
+                'data' => [],
+            );
+        } else {
+            $hasil = array(
+                'code' => 200,
+                'message' => "Gagal update transaksi",
+                'data' => [],
+            );
+        }
+
+        echo json_encode($hasil);
+    }
 }

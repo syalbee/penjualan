@@ -34,4 +34,10 @@ class Pengguna_model extends CI_Model {
 		$this->db->where('id', $id);
 		return $this->db->get($this->table);
 	}
+
+	public function search($search = "")
+	{
+		$this->db->like('nama', $search);
+		return $this->db->get($this->table)->result();
+	}
 }

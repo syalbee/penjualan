@@ -16,11 +16,23 @@ class Cetak extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
     }
 
+    function format_rupiah($angka)
+    {
+        $hasil = 'Rp ' . number_format($angka, 0, ",", ".");
+        return $hasil;
+    }
+
+    function format_rupiah_2($angka)
+    {
+        $hasil = number_format($angka, 0, ",", ".");
+        return $hasil;
+    }
+
     public function struk($id)
     {
         $connector = new Escpos\PrintConnectors\WindowsPrintConnector('thermalprint');
         $printer = new Escpos\Printer($connector);
-        
+
         $transaksi = $this->_getTransaksi($id);
 
         $printer->initialize();
@@ -39,19 +51,20 @@ class Cetak extends CI_Controller
         $printer->text("\n");
 
         foreach ($transaksi['produk'] as $key) {
+            if ($key != null) {
+                $printer->initialize();
+                $printer->setFont(Escpos\Printer::FONT_A);
+                $printer->text($key->nama_product . "  \n");
 
-            $printer->initialize();
-            $printer->setFont(Escpos\Printer::FONT_A);
-            $printer->text($key->nama . "  \n");
+                $printer->initialize();
+                $printer->setFont(Escpos\Printer::FONT_C);
+                $printer->text($key->qty . " * ");
+                $printer->text($this->format_rupiah_2($key->harga) . " = ");
 
-            $printer->initialize();
-            $printer->setFont(Escpos\Printer::FONT_C);
-            $printer->text($key->total . " * ");
-            $printer->text($key->harga . " = ");
-
-            $printer->text($key->total * $key->harga . "\n");
-            $printer->initialize();
-            $printer->setFont(Escpos\Printer::FONT_A);
+                $printer->text($this->format_rupiah_2($key->qty * $key->harga) . "\n");
+                $printer->initialize();
+                $printer->setFont(Escpos\Printer::FONT_A);
+            }
         }
 
         $printer->text("-------------------------------");
@@ -68,9 +81,9 @@ class Cetak extends CI_Controller
             $printer->text("--------------------------------");
         }
 
-        $printer->text("Total   : " . $transaksi['total'] . "\n");
-        $printer->text("Tunai   : " . $transaksi['bayar'] . "\n");
-        $printer->text("Kembali : " . $transaksi['kembalian'] . "\n");
+        $printer->text("Total   : " .  $this->format_rupiah($transaksi['total']) . "\n");
+        $printer->text("Tunai   : " .  $this->format_rupiah($transaksi['bayar']) . "\n");
+        $printer->text("Kembali : " .  $this->format_rupiah($transaksi['kembalian']) . "\n");
         $printer->text("\n");
 
         $printer->initialize();
@@ -79,7 +92,6 @@ class Cetak extends CI_Controller
 
         $printer->feed(2); // mencetak 2 baris kosong, agar kertas terangkat ke atas
         $printer->close();
-        
     }
 
     public function test()
@@ -87,40 +99,59 @@ class Cetak extends CI_Controller
         redirect('dashboard');
     }
 
+    // private function _getTransaksi($id)
+    // {
+    //     $produk = $this->transaksi_model->getAll($id);
+
+    //     $tanggal = new DateTime($produk->tanggal);
+    //     $barcode = explode(',', $produk->barcode);
+    //     $qty = explode(',', $produk->qty);
+    //     $stsHarga = explode(',', $produk->status_harga);
+    //     $produk->tanggal = $tanggal->format('d-m-Y H:i:s');
+    //     $dataProduk = $this->transaksi_model->getName($barcode);
+
+
+    //     foreach ($dataProduk as $key => $value) {
+    //         if ($value != null) {
+    //             $false = $value->sts = $stsHarga[$key];
+    //             if ($false === "1") {
+    //                 $value->harga = $value->harga_grosir;
+    //             } else {
+    //                 $value->harga = $value->harga_biasa;
+    //             }
+    //             $value->total = $qty[$key];
+    //         }
+    //     }
+
+    //     $data = array(
+    //         'nota' => $produk->nota,
+    //         'tanggal' => $produk->tanggal,
+    //         'produk' => $dataProduk,
+    //         'total' => $produk->total_bayar,
+    //         'bayar' => $produk->jumlah_uang,
+    //         'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
+    //         'kasir' => $produk->kasir,
+    //         'pelanggan' => $produk->pelanggan
+    //     );
+
+    //     return $data;
+    // }
+
     private function _getTransaksi($id)
     {
-        $produk = $this->transaksi_model->getAll($id);
-
-        $tanggal = new DateTime($produk->tanggal);
-        $barcode = explode(',', $produk->barcode);
-        $qty = explode(',', $produk->qty);
-        $stsHarga = explode(',', $produk->status_harga);
-        $produk->tanggal = $tanggal->format('d-m-Y H:i:s');
-        $dataProduk = $this->transaksi_model->getName($barcode);
-
-
-        foreach ($dataProduk as $key => $value) {
-            $false = $value->sts = $stsHarga[$key];
-            if ($false === "1") {
-                $value->harga = $value->harga_grosir;
-            } else {
-                $value->harga = $value->harga_biasa;
-            }
-
-            $value->total = $qty[$key];
-        }
+        $transaksi = $this->transaksi_model->get_struk($id)->result()[0];
+        $produk = $this->transaksi_model->detail_produk($id)->result();
 
         $data = array(
-            'nota' => $produk->nota,
-            'tanggal' => $produk->tanggal,
-            'produk' => $dataProduk,
-            'total' => $produk->total_bayar,
-            'bayar' => $produk->jumlah_uang,
-            'kembalian' => $produk->jumlah_uang - $produk->total_bayar,
-            'kasir' => $produk->kasir,
-            'pelanggan' => $produk->pelanggan
+            'nota' => $transaksi->nota,
+            'tanggal' => $transaksi->tanggal,
+            'total' => $transaksi->total,
+            'bayar' => $transaksi->jumlah_uang,
+            'kembalian' => $transaksi->jumlah_uang - $transaksi->total,
+            'kasir' => $transaksi->nama_pengguna,
+            'pelanggan' => $transaksi->id_pelanggan,
+            'produk' => $produk,
         );
-
-        return $data;
+       return $data;
     }
 }

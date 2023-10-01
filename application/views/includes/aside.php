@@ -94,12 +94,13 @@
 
             <ul class="nav-treeview">
               <li class="nav-item">
-                <a href="<?php echo site_url('laporan/laporan_harian') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_harian' ? 'active' : 'no' ?>">
+                <a href="<?php echo site_url('laporan/laporan_penjualan') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_penjualan' ? 'active' : 'no' ?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Laporan Harian</p>
+                  <p>Laporan Penjualan</p>
                 </a>
               </li>
-              <li class="nav-item">
+
+              <!-- <li class="nav-item">
                 <a href="<?php echo site_url('laporan/laporan_bulanan') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_bulanan' ? 'active' : 'no' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Laporan Bulanan</p>
@@ -111,7 +112,7 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Laporan Tahunan</p>
                 </a>
-              </li>
+              </li> -->
 
               <li class="nav-item">
                 <a href="<?php echo site_url('laporan/laporan_penukaran') ?>" class="nav-link <?php echo $this->uri->segment(2) == 'laporan_penukaran' ? 'active' : 'no' ?>">

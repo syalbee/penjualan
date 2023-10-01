@@ -31,16 +31,18 @@ class Pelanggan extends CI_Controller
 		header('Content-type: application/json');
 		if ($this->pelanggan_model->read()->num_rows() > 0) {
 			foreach ($this->pelanggan_model->read()->result() as $pelanggan) {
-				$data[] = array(
-					'id' => $pelanggan->id,
-					'memberid' => $pelanggan->memberid,
-					'nama' => $pelanggan->nama,
-					'point' => $pelanggan->point,
-					'alamat' => $pelanggan->alamat,
-					'telepon' => $pelanggan->telepon,
-					'nik' => $pelanggan->nik,
-					'action' => '<button class="btn btn-sm btn-warning" onclick="edit(' . $pelanggan->id . ')"><i class="fas fa-user-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="remove(' . $pelanggan->id . ')"><i class="fas fa-user-times"></i></button>'
-				);
+				if ($pelanggan->id != 0) {
+					$data[] = array(
+						'id' => $pelanggan->id,
+						'memberid' => $pelanggan->memberid,
+						'nama' => $pelanggan->nama,
+						'point' => $pelanggan->point,
+						'alamat' => $pelanggan->alamat,
+						'telepon' => $pelanggan->telepon,
+						'nik' => $pelanggan->nik,
+						'action' => '<button class="btn btn-sm btn-warning" onclick="edit(' . $pelanggan->id . ')"><i class="fas fa-user-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="remove(' . $pelanggan->id . ')"><i class="fas fa-user-times"></i></button>'
+					);
+				}
 			}
 		} else {
 			$data = array();
@@ -59,6 +61,7 @@ class Pelanggan extends CI_Controller
 			'nama' => $this->input->post('nama'),
 			'point' => 0,
 			'alamat' => $this->input->post('alamat'),
+			'nik' => $this->input->post('nik'),
 			'telepon' => $this->input->post('telepon'),
 		);
 
@@ -100,7 +103,7 @@ class Pelanggan extends CI_Controller
 	public function search()
 	{
 		header('Content-type: application/json');
-		$pelanggan = $this->input->post('pelanggan');
+		$pelanggan = $this->input->post('nama');
 		$search = $this->pelanggan_model->search($pelanggan);
 		foreach ($search as $pelanggan) {
 			$data[] = array(
