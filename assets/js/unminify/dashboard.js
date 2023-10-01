@@ -16,6 +16,7 @@ $.ajax({
 	type: "get",
 	dataType: "json",
 	success: (res) => {
+		console.log(res);
 		$("#transaksi_hari").html(res.total);
 	},
 });
@@ -26,10 +27,26 @@ $.ajax({
 	dataType: "json",
 	success: (res) => {
 		// console.log(res.pengeluaran);
-		$("#transaksi_terakhir").html(res.pengeluaran);
+		$("#transaksi_terakhir").html("Rp. " + formatRupiah(res.pengeluaran));
 	},
 });
 
+function formatRupiah(angka, prefix) {
+	var number_string = angka.toString().replaceAll(".", ""),
+		split = number_string.split(","),
+		sisa = split[0].length % 3,
+		rupiah = split[0].substr(0, sisa),
+		ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+	// tambahkan titik jika yang di input sudah menjadi angka ribuan
+	if (ribuan) {
+		separator = sisa ? "." : "";
+		rupiah += separator + ribuan.join(".");
+	}
+
+	rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+	return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+}
 // $.ajax( {
 //     url:stok_hariUrl,
 //     type:"get",

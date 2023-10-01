@@ -67,7 +67,7 @@ class Transaksi_model extends CI_Model
 
 	public function transaksiHari($hari)
 	{
-		return $this->db->query("SELECT COUNT(*) AS total FROM transaksi WHERE DATE_FORMAT(tanggal, '%d %m %Y') = '$hari'")->row();
+		return $this->db->query("SELECT COUNT(*) AS total FROM transaksi_2 WHERE DATE_FORMAT(tanggal, '%d %m %Y') = '$hari'")->row();
 	}
 
 	public function transaksiTerakhir($hari)

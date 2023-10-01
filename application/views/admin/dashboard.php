@@ -40,7 +40,7 @@
               <div class="icon">
                 <i class="fas fa-shopping-cart"></i>
               </div>
-              <a href="<?php echo site_url('laporan/laporan_harian') ?>" class="small-box-footer">
+              <a href="<?php echo site_url('laporan/laporan_penjualan') ?>" class="small-box-footer">
                 More Info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -54,7 +54,7 @@
               <div class="icon">
                 <i class="fas fa-money-bill"></i>
               </div>
-              <a href="<?php echo site_url('laporan/laporan_harian') ?>" class="small-box-footer">
+              <a href="<?php echo site_url('laporan/laporan_penjualan') ?>" class="small-box-footer">
                 More Info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>

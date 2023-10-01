@@ -41,7 +41,7 @@ class Laporan_model extends CI_Model
 	public function sumHari()
 	{
 		$query = "SELECT SUM(total_bayar) AS pengeluaran, SUM(jumlah_uang) AS pemasukan 
-                  FROM transaksi WHERE SUBSTR(tanggal, 1,10 )= DATE(NOW())";
+                  FROM transaksi_2 WHERE SUBSTR(tanggal, 1,10 )= DATE(NOW())";
 
 		return $this->db->query($query);
 	}
@@ -49,7 +49,7 @@ class Laporan_model extends CI_Model
 	public function sumBulan()
 	{
 		$query = "SELECT SUM(total_bayar) AS pengeluaran, SUM(jumlah_uang) AS pemasukan 
-                  FROM transaksi WHERE MONTH(tanggal)=MONTH(NOW()) ";
+                  FROM transaksi_2 WHERE MONTH(tanggal)=MONTH(NOW()) ";
 
 		return $this->db->query($query);
 	}
@@ -57,7 +57,7 @@ class Laporan_model extends CI_Model
 	public function sumTahun()
 	{
 		$query = "SELECT SUM(total_bayar) AS pengeluaran, SUM(jumlah_uang) AS pemasukan 
-                  FROM transaksi WHERE YEAR(tanggal)=YEAR(NOW()) ";
+                  FROM transaksi_2 WHERE YEAR(tanggal)=YEAR(NOW()) ";
 
 		return $this->db->query($query);
 	}
