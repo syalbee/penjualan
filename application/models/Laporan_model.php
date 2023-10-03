@@ -72,7 +72,7 @@ class Laporan_model extends CI_Model
 		return $data;
 	}
 
-	public function laporan($where = array(), $start_date, $end_date)
+	public function laporan($where = array(), $start_date = '', $end_date = '')
 	{
 		$this->db->select('tk.*, pg.nama as nama_pelanggan, pn.nama as nama_pengguna, SUM(dt.qty * dt.harga) as total');
 		$this->db->from('transaksi_2 tk');

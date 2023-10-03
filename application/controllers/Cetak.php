@@ -152,6 +152,6 @@ class Cetak extends CI_Controller
             'pelanggan' => $transaksi->id_pelanggan,
             'produk' => $produk,
         );
-       return $data;
+        return $data;
     }
 }
